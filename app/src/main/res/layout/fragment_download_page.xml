@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DownloadPage">
+
+
+    <TextView
+        android:id="@+id/tvPageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/download_page_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/etUrl"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="48dp"
+        android:ems="10"
+        android:hint="@string/song_url"
+        android:importantForAutofill="no"
+        android:inputType="textUri"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPageTitle"
+        app:layout_constraintWidth_max="488dp" />
+
+    <EditText
+        android:id="@+id/etTitle"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/song_title"
+        android:importantForAutofill="no"
+
+        android:inputType="text"
+        app:layout_constraintEnd_toStartOf="@+id/btnAutofillTitle"
+        app:layout_constraintStart_toStartOf="@id/etUrl"
+        app:layout_constraintTop_toBottomOf="@id/etUrl" />
+
+    <EditText
+        android:id="@+id/etAuthor"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="@string/song_author"
+        android:importantForAutofill="no"
+
+        android:inputType="text"
+        app:layout_constraintEnd_toStartOf="@+id/btnAutofillAuthor"
+        app:layout_constraintStart_toStartOf="@id/etTitle"
+        app:layout_constraintTop_toBottomOf="@id/etTitle" />
+
+    <EditText
+        android:id="@+id/etAlbum"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+
+
+        android:ems="10"
+        android:hint="@string/song_album"
+        android:importantForAutofill="no"
+
+        android:inputType="text"
+        app:layout_constraintEnd_toStartOf="@+id/btnAutofillAlbum"
+        app:layout_constraintStart_toStartOf="@id/etAuthor"
+        app:layout_constraintTop_toBottomOf="@id/etAuthor" />
+
+    <EditText
+        android:id="@+id/etTags"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+
+
+        android:ems="10"
+        android:hint="@string/song_tags"
+        android:importantForAutofill="no"
+
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/etUrl"
+        app:layout_constraintStart_toStartOf="@id/etAlbum"
+        app:layout_constraintTop_toBottomOf="@id/etAlbum" />
+
+    <Button
+        android:id="@+id/btnDownloadSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/download_button"
+        app:icon="@drawable/ic_download"
+        app:layout_constraintEnd_toEndOf="@id/etTags"
+        app:layout_constraintStart_toStartOf="@id/etTags"
+        app:layout_constraintTop_toBottomOf="@id/downloadProgress" />
+
+    <ProgressBar
+        android:id="@+id/downloadProgress"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:max="1000"
+        android:progress="0"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@id/tvDownloadPercent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etTags"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvDownloadPercent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/downloadProgress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/downloadProgress"
+        tools:text="100%"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvDownloadInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="25dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnDownloadSong"
+        tools:text="Downloading Info..." />
+
+    <TextView
+        android:id="@+id/downloaderUpdateText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="15dp"
+        android:text="@string/downloader_update_tooltip"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDownloaderInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="25dp"
+        android:textAlignment="center"
+
+        app:layout_constraintBottom_toTopOf="@+id/downloaderUpdateText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Version: 2025.5.6\nState: Up to date!" />
+
+    <Button
+        android:id="@+id/btnUpdateDownloader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="@string/downloader_update"
+
+        app:icon="@drawable/ic_refresh"
+        app:layout_constraintBottom_toTopOf="@id/tvDownloaderInfo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ToggleButton
+        android:id="@+id/btnAutofillTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/etTitle"
+        app:layout_constraintEnd_toEndOf="@+id/etUrl"
+        app:layout_constraintTop_toTopOf="@+id/etTitle" />
+
+    <ToggleButton
+        android:id="@+id/btnAutofillAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/etAuthor"
+        app:layout_constraintEnd_toEndOf="@+id/btnAutofillTitle"
+        app:layout_constraintTop_toTopOf="@+id/etAuthor" />
+
+    <ToggleButton
+        android:id="@+id/btnAutofillAlbum"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/etAlbum"
+        app:layout_constraintEnd_toEndOf="@+id/btnAutofillAuthor"
+        app:layout_constraintTop_toTopOf="@+id/etAlbum" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

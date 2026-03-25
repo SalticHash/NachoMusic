@@ -1,0 +1,88 @@
+<resources>
+    <string name="app_name">NachoMusic</string>
+
+    <!-- Menu Pages -->
+    <string name="player_page">Reproductor</string>
+    <string name="music_page">Música</string>
+
+    <string name="download_page">Descargar</string>
+    <string name="download_page_title">Descargar Music</string>
+
+    <string name="settings_page">Ajustes</string>
+    <string name="settings_page_title">Página de ajustes</string>
+
+    <!-- Music page -->
+    <string name="song_error">Error en la canción</string>
+    <string name="empty_songs">¡No tienes canciones descargadas!\n¡Dirigete a la página de descargas para conseguir algunas!\n\nLas canciones se descargan en \"%1$s\"</string>
+    <string name="not_found">Archivo de música no encontrado…</string>
+    <string name="unnamed_song">Canción sin nombrar</string>
+    <string name="unauthored_song">Autor</string>
+
+    <!-- Media controls -->
+    <string name="controls_next">Siguiente canción</string>
+    <string name="controls_prev">Canción anterior</string>
+    <string name="controls_play_pause">Alternar reproducción de la música</string>
+    <string name="controls_shuffle">Alternar reproducción aleatoria</string>
+    <string name="controls_repeat">Alternar repetición</string>
+    <string name="controls_play_mode">Alternar modo de reproducción</string>
+
+    <!-- Song form -->
+    <string name="song_url">URL de la canción</string>
+    <string name="song_title">Nombre</string>
+    <string name="song_author">Autor</string>
+    <string name="song_album">Albúm Name</string>
+    <string name="song_tags">Etiquetas</string>
+    <string name="song_form_error_url">URL invalido</string>
+    <string name="song_form_error_title">Se requiere nombre</string>
+
+    <!-- Editor -->
+    <string name="editor_title">Editar canción</string>
+    <string name="copy_url_button">Copiar URL</string>
+    <string name="edit_button">Guardar</string>
+    <string name="cancel_edit_button">Cancelar cambios</string>
+    <string name="delete_button">Borrar canción</string>
+    <string name="delete_song_title">Borrar canción</string>
+    <string name="delete_song_msg">¿Seguro de que quieres borrar esta canción?\n(Esta acción es permanente)</string>
+
+    <!-- Download page -->
+    <string name="download_time_left">%1$d segundos restantes…\n%2$s</string>
+    <string name="download_button">Descargar canción</string>
+    <string name="download_wait">Espere a que acabe la descarga…</string>
+    <string name="autofill">Autocompletar casilla</string>
+    <string name="no_internet">Sin conexión…</string>
+    <string name="batch_success">Descarga por lote completa!</string>
+    <string name="download_success">Se descargo \"%1$s\"!</string>
+    <string name="download_failure">Descarga fallida…</string>
+
+    <!-- Downloader -->
+    <string name="downloader_update">Actualizar el downloader</string>
+    <string name="downloader_update_tooltip">Si recibes problemas con el downloader puedes intentar actualizandolo.</string>
+    <string name="downloader_update_info">Versión: %1$s\nEstado: %2$s</string>
+    <string name="downloader_update_info_no_state">Versión: %1$s</string>
+    <string name="downloader_done">Actualización completa!</string>
+    <string name="downloader_up_to_date">Ya estaba actualizado!</string>
+    <!-- Notification -->
+    <string name="download_info">Tu descarga esta siendo procesada.</string>
+    <string name="download_starting">Empezando descarga…</string>
+    <string name="download_finished">Acabo la descarga!</string>
+    <string name="download_progress">Descargando… (%1$d%%)</string>
+    <string name="downloads_channel_name">Descargas</string>
+    <string name="downloads_channel_desc">Notificaciones para el progreso de tus descargas…</string>
+
+    <!-- Settings -->
+    <string name="settings_see_songs">Ver folder de descargas</string>
+    <string name="settings_check_songs">Revisar por canciones no gardadas</string>
+    <string name="settings_delete_songs">Borrar TODAS las canciones</string>
+    <string name="delete_all_title">Borrar TODAS las canciones</string>
+    <string name="delete_all_msg">¿Seguro de que quieres borrar TODAS las canciones?\n(Esta acción es permanente)</string>
+
+
+    <!-- Misc -->
+    <string name="share_error">Nada fue compartido</string>
+    <string name="page_under_dev">🚧 Bajo construcción 🚧</string>
+    <string name="unknown_error">Ocurrio un error inesperado, intentalo mas tarde.</string>
+    <string name="yes">Si</string>
+    <string name="cancel">Cancelar</string>
+    <string name="notification_warn">Activa notificaciones para progreso de descarga.</string>
+
+</resources>

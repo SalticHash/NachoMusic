@@ -1,0 +1,32 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Outer gradient stroke -->
+    <item android:top="4dp"
+        android:bottom="4dp"
+        android:left="4dp"
+        android:right="4dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#DDDDDD"
+                android:endColor="#AAAAAA"
+                android:angle="90" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+
+    <!-- Inner beveled surface -->
+    <item android:top="8dp"
+          android:bottom="8dp"
+          android:left="8dp"
+          android:right="8dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#EEEEEE"
+                android:centerColor="#DDDDDD"
+                android:endColor="#AAAAAA"
+                android:angle="270" />
+            <corners android:radius="8dp" />
+        </shape>
+    </item>
+
+</layer-list>

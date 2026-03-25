@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/playerPage"
+        android:enabled="true"
+        android:icon="@drawable/ic_player_page"
+        android:title="@string/player_page" />
+    <item
+        android:id="@+id/musicPage"
+        android:enabled="true"
+        android:icon="@drawable/ic_music_page"
+        android:title="@string/music_page" />
+    <item
+        android:id="@+id/downloadPage"
+        android:enabled="true"
+        android:icon="@drawable/ic_download"
+        android:title="@string/download_page" />
+    <item
+        android:id="@+id/settingsPage"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings_page"
+        android:title="@string/settings_page" />
+</menu>

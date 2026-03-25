@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <drawable name="exo_styled_controls_pause" tools:override="true">
+        @drawable/ic_pause_song
+    </drawable>
+
+    <drawable name="exo_styled_controls_play" tools:override="true">
+        @drawable/ic_play_song
+    </drawable>
+
+
+    <drawable name="exo_styled_controls_previous" tools:override="true">
+        @drawable/ic_last_song
+    </drawable>
+
+    <drawable name="exo_styled_controls_next" tools:override="true">
+        @drawable/ic_next_song
+    </drawable>
+
+
+    <drawable name="exo_styled_controls_shuffle_on" tools:override="true">
+        @drawable/ic_shuffle
+    </drawable>
+
+    <drawable name="exo_styled_controls_shuffle_off" tools:override="true">
+        @drawable/ic_shuffle_off
+    </drawable>
+
+    <drawable name="exo_styled_controls_repeat_off" tools:override="true">
+        @drawable/ic_repeat_off
+    </drawable>
+
+    <drawable name="exo_styled_controls_repeat_one" tools:override="true">
+        @drawable/ic_repeat_one
+    </drawable>
+
+    <drawable name="exo_styled_controls_repeat_all" tools:override="true">
+        @drawable/ic_repeat_all
+    </drawable>
+
+</resources>

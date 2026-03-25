@@ -1,0 +1,19 @@
+<resources>
+
+    <style name="Widget.Theme.MusicApp.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
+
+    <style name="RealButton" parent="@style/Widget.AppCompat.ImageButton">
+        <item name="android:elevation">1dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">25dp</item>
+        <item name="android:background">@drawable/rounded_button</item>
+    </style>
+
+    <style name="RealSmallButton" parent="@style/RealButton">
+        <item name="android:padding">4dp</item>
+        <item name="android:background">@drawable/small_rounded_button</item>
+    </style>
+</resources>

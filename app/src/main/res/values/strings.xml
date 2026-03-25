@@ -1,0 +1,86 @@
+<resources>
+    <string name="app_name">NachoMusic</string>
+
+    <!-- Menu Pages -->
+    <string name="player_page">Player</string>
+    <string name="music_page">Music</string>
+
+    <string name="download_page">Download</string>
+    <string name="download_page_title">Download Music</string>
+
+    <string name="settings_page">Settings</string>
+    <string name="settings_page_title">Settings Page</string>
+
+    <!-- Music page -->
+    <string name="song_error">Song error</string>
+    <string name="empty_songs">You have no songs downloaded!\nHead to the download page to get some!\n\nSongs are downloaded in \"%1$s\"</string>
+    <string name="not_found">Music file not found…</string>
+    <string name="unnamed_song">Unnamed song</string>
+    <string name="unauthored_song">Author</string>
+
+    <!-- Media controls -->
+    <string name="controls_next">Next song</string>
+    <string name="controls_prev">Previous song</string>
+    <string name="controls_play_pause">Toggle song playback</string>
+    <string name="controls_shuffle">Toggle song shuffling</string>
+    <string name="controls_repeat">Toggle song repeat</string>
+    <string name="controls_play_mode">Toggle play mode</string>
+
+    <!-- Song form -->
+    <string name="song_url">Song URL</string>
+    <string name="song_title">Song Title</string>
+    <string name="song_author">Song Author</string>
+    <string name="song_album">Album Name</string>
+    <string name="song_tags">Tags</string>
+    <string name="song_form_error_url">Invalid URL</string>
+    <string name="song_form_error_title">Missing Title</string>
+
+    <!-- Editor -->
+    <string name="editor_title">Edit Music</string>
+    <string name="copy_url_button">Copy URL</string>
+    <string name="edit_button">Save</string>
+    <string name="cancel_edit_button">Cancel Edits</string>
+    <string name="delete_button">Delete Song</string>
+    <string name="delete_song_title">Delete Song</string>
+    <string name="delete_song_msg">Are you sure you want to delete this song?\n(This action is permanent)</string>
+
+    <!-- Download page -->
+    <string name="download_time_left">%1$d seconds left…\n%2$s</string>
+    <string name="download_button">Download Song</string>
+    <string name="download_wait">Wait for download to finish…</string>
+    <string name="autofill">Autofill entry</string>
+    <string name="no_internet">No internet connection…</string>
+    <string name="batch_success">Batch download finished!</string>
+    <string name="download_success">Downloaded \"%1$s\"!</string>
+    <string name="download_failure">Download failed…</string>
+    <!-- Notification -->
+    <string name="download_info">Your download is being processed.</string>
+    <string name="download_starting">Download starting…</string>
+    <string name="download_finished">Download finished!</string>
+    <string name="download_progress">Downloading… (%1$d%%)</string>
+    <string name="downloads_channel_name">Downloads</string>
+    <string name="downloads_channel_desc">Notifications for you download progress…</string>
+
+    <!-- Downloader -->
+    <string name="downloader_update">Update Downloader</string>
+    <string name="downloader_update_tooltip">If you are experiencing issues with the downloader you can try updating it.</string>
+    <string name="downloader_update_info">Version: %1$s\nState: %2$s</string>
+    <string name="downloader_update_info_no_state">Version: %1$s</string>
+    <string name="downloader_done">Update completed!</string>
+    <string name="downloader_up_to_date">Up to date!</string>
+
+    <!-- Settings -->
+    <string name="settings_see_songs">See downloads folder</string>
+    <string name="settings_check_songs">Check for unsaved songs in data</string>
+    <string name="settings_delete_songs">Delete ALL songs</string>
+    <string name="delete_all_title">Delete ALL songs</string>
+    <string name="delete_all_msg">Are you sure you want to delete all songs?\n(This action is permanent)</string>
+
+    <!-- Misc -->
+    <string name="page_under_dev">🚧 Under construction 🚧</string>
+    <string name="share_error">Nothing shared</string>
+    <string name="unknown_error">Unexpected error occurred, try again later.</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="notification_warn">Enable notifications for download progress.</string>
+</resources>
