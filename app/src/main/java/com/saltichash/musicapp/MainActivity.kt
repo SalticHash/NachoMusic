@@ -1,7 +1,9 @@
 package com.saltichash.musicapp
 
 
+import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -14,6 +16,7 @@ import com.yausername.aria2c.Aria2c
 import com.yausername.ffmpeg.FFmpeg
 import com.yausername.youtubedl_android.YoutubeDL
 import com.yausername.youtubedl_android.YoutubeDLException
+import java.util.Calendar
 
 
 private const val TAG = "MainActivityLogs"
@@ -27,10 +30,46 @@ class MainActivity : AppCompatActivity() {
     private lateinit var downloadPage: DownloadPage
     private lateinit var settingsPage: SettingsPage
 
+    fun switchTo(alias: String) {
+        val pm = packageManager
+        val default = ComponentName(this, "com.saltichash.musicapp.AliasDefault")
+        val christmas = ComponentName(this, "com.saltichash.musicapp.AliasChristmas")
+
+        val state = pm.getComponentEnabledSetting(christmas)
+        val isChristmasEnabled =
+            state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED ||
+            state == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT
+
+
+        if (alias == "christmas" && isChristmasEnabled) return
+        if (alias == "default" && !isChristmasEnabled) return
+
+        pm.setComponentEnabledSetting(
+            default,
+            if (alias == "default") PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
+
+        pm.setComponentEnabledSetting(
+            christmas,
+            if (alias == "christmas") PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+            else PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+            PackageManager.DONT_KILL_APP
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Update Icon
+        val calendar = Calendar.getInstance()
+        val month = calendar.get(Calendar.MONTH)
+        if (month == Calendar.DECEMBER) {
+            switchTo("christmas")
+        } else {
+            switchTo("default")
+        }
 
         // Make UI extend over notifications and phone's buttons
         enableEdgeToEdge()
