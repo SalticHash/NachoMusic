@@ -111,6 +111,10 @@ class MusicEntryAdapter(private val dataSet: MutableList<MusicEntry>,
         filter(lastQuery)
     }
 
+    fun getRealItem(position: Int): MusicEntry {
+        return dataSet[position]
+    }
+
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item

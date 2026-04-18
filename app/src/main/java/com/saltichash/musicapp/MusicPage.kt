@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
@@ -30,8 +32,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.common.util.concurrent.MoreExecutors
+import com.saltichash.musicapp.MusicEntryAdapter.ViewHolder
 import java.io.File
-
+import java.util.Locale
 
 
 enum class PlayMode {
@@ -45,7 +48,6 @@ enum class PlayMode {
 private const val TAG = "MainActivityLogs"
 class MusicPage : Fragment() {
     private lateinit var lvMusicEntries: RecyclerView
-    private lateinit var playerView: PlayerView
     private lateinit var searchView: SearchView
     private lateinit var tvEmptySongs: TextView
     private lateinit var mediaController: MediaController
@@ -68,6 +70,13 @@ class MusicPage : Fragment() {
     private var currentEditedEntry: MusicEntry? = null
     private var currentEditedPosition: Int? = null
 
+    // Music Player
+    private lateinit var playerView: PlayerView
+    private lateinit var albumImage: ImageView
+    private lateinit var songTitle: TextView
+    private lateinit var currentSongEntry: ConstraintLayout
+    private lateinit var musicPlayerLayout: ConstraintLayout
+
     override fun onStart() {
         super.onStart()
         val ctx = requireContext()
@@ -80,6 +89,19 @@ class MusicPage : Fragment() {
                 // attached to the PlayerView UI component.
                 mediaController = controllerFuture.get()
                 playerView.setPlayer(mediaController)
+
+                fun updateMetadata() {
+                    val metadata = mediaController.mediaMetadata
+                    val item = listAdapter.getRealItem(mediaController.currentMediaItemIndex)
+                    changedMetadata(metadata, item)
+                }
+                mediaController.addListener(object : Player.Listener {
+                        override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+                            updateMetadata()
+                        }
+                    })
+                updateMetadata()
+
                 mediaController.addListener(object : Player.Listener {
                     override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                         super.onMediaItemTransition(mediaItem, reason)
@@ -107,6 +129,11 @@ class MusicPage : Fragment() {
         playerView.requestFocus()
         @androidx.media3.common.util.UnstableApi
         playerView.showController()
+        musicPlayerLayout = view.findViewById(R.id.musicPlayerLayout)
+
+        songTitle = musicPlayerLayout.findViewById(R.id.songTitle)
+        albumImage = musicPlayerLayout.findViewById(R.id.albumImage)
+        currentSongEntry = view.findViewById(R.id.currentSongEntry)
 
         tvEmptySongs = view.findViewById(R.id.tvEmptySongs)
         tvEmptySongs.text = getString(R.string.empty_songs, MusicManager.appPath.absolutePath)
@@ -256,6 +283,16 @@ class MusicPage : Fragment() {
             }
         })
 
+        currentSongEntry.setOnClickListener {
+            if (musicPlayerLayout.visibility == View.VISIBLE) {
+                musicPlayerLayout.visibility = View.GONE
+                lvMusicEntries.visibility = View.VISIBLE
+            } else {
+                musicPlayerLayout.visibility = View.VISIBLE
+                lvMusicEntries.visibility = View.GONE
+            }
+        }
+
         return view
     }
 
@@ -394,6 +431,83 @@ class MusicPage : Fragment() {
                 btn.setImageResource(R.drawable.ic_playmode_once)
             }
         }
+    }
+
+    private fun changedMetadata(meta: MediaMetadata, entry: MusicEntry?) {
+        if (entry != null) setCurrentSongEntry(entry)
+        songTitle.text = entry?.title
+        val data = meta.artworkData
+        if (data?.isNotEmpty() == true) {
+            val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+            albumImage.setImageBitmap(bitmap)
+        }
+    }
+
+
+    // Replace the contents of a view (invoked by the layout manager)
+    fun setCurrentSongEntry(entry: MusicEntry) {
+        val tvTitle: TextView = currentSongEntry.findViewById(R.id.tvTitle)
+        val tvDesc: TextView = currentSongEntry.findViewById(R.id.tvDesc)
+        val tvDuration: TextView = currentSongEntry.findViewById(R.id.tvDuration)
+        val icError: ImageView = currentSongEntry.findViewById(R.id.icError)
+
+        val viewHolder = currentSongEntry
+        tvTitle.text = if (entry.title.isBlank()) {
+            viewHolder.context.getString(R.string.unnamed_song)
+        } else {
+            entry.title
+        }
+
+
+        val tags = entry.tags
+            .map { it.lowercase().replaceFirstChar { c -> c.uppercaseChar() } }
+            .joinToString(", ")
+
+
+        val author = if (entry.author.isBlank()) {
+            viewHolder.context.getString(R.string.unauthored_song)
+        } else {
+            entry.author
+        }
+
+        // Possible outcomes:
+        // (Maria - Album) / (Author - Album)
+        // (Maria)
+        // ""
+        val creditsText = if (entry.album.isNotBlank()) {
+            String.format(Locale.getDefault(), "(%s - %s)", author, entry.album)
+        } else if (entry.author.isNotBlank()) {
+            String.format(Locale.getDefault(), "(%s)", entry.author)
+        } else {
+            ""
+        }
+
+        tvDesc.text = if (creditsText.isNotBlank()) {
+            if (tags.isNotBlank()) {
+                String.format(Locale.getDefault(), "%s • %s", creditsText, tags)
+            } else {
+                String.format(Locale.getDefault(), "%s", creditsText)
+            }
+        } else {
+            String.format(Locale.getDefault(), "%s", tags)
+        }
+
+
+        if (entry.error) {
+            icError.visibility = View.VISIBLE
+        }
+
+        if (entry.author.isBlank() && entry.album.isBlank() && tags.isBlank()) {
+            tvDesc.visibility = View.GONE
+        } else {
+            tvDesc.visibility = View.VISIBLE
+        }
+
+        val secondsTotal = entry.durationMsec / 1000
+        val minutes = secondsTotal / 60
+        val seconds = secondsTotal % 60
+        tvDuration.text =
+            String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
     }
 
 }
