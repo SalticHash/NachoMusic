@@ -25,20 +25,29 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Test" />
 
-    <ImageView
-        android:id="@+id/albumImage"
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="48dp"
         android:layout_marginEnd="48dp"
-        android:background="#494848"
-        android:contentDescription="@string/song_album"
+        
         app:layout_constraintBottom_toTopOf="@+id/playerView"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/songTitle"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.25" >
+
+        <ImageView
+            android:id="@+id/albumImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:background="#494848"
+            android:contentDescription="@string/song_album"
+            />
+    </RelativeLayout>
 
     <androidx.media3.ui.PlayerView
         android:id="@+id/playerView"

@@ -7,10 +7,12 @@
     android:orientation="vertical"
     tools:context=".MusicPage">
 
-    <SearchView
+    <MultiAutoCompleteTextView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:completionThreshold="1"
+        android:hint="Search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -98,7 +100,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,15 +14,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.MultiAutoCompleteTextView
 import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.TextView
@@ -55,7 +60,7 @@ enum class PlayMode {
 private const val TAG = "MainActivityLogs"
 class MusicPage : Fragment() {
     private lateinit var lvMusicEntries: RecyclerView
-    private lateinit var searchView: SearchView
+    private lateinit var searchView: MultiAutoCompleteTextView
     private lateinit var tvEmptySongs: TextView
     private lateinit var mediaController: MediaController
     lateinit var listAdapter: MusicEntryAdapter
@@ -289,17 +294,27 @@ class MusicPage : Fragment() {
 
 
         // Search
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(p0: String?): Boolean {
-                listAdapter.filter(p0)
-                return false
-            }
-
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                listAdapter.filter(p0)
-                return false
+        val aaStr:ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item,
+            mutableListOf())
+        searchView.setAdapter(aaStr);
+        searchView.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
+        searchView.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) {
+                listAdapter.filter(text.toString())
             }
         })
+        searchView.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) return@setOnFocusChangeListener
+            val tags = MusicManager.musicEntries.values
+                .flatMap { it.tags }
+                .distinct()
+
+            aaStr.clear()
+            aaStr.addAll(tags)
+            aaStr.notifyDataSetChanged()
+        }
 
         currentSongEntry.setOnClickListener {
             val idx = mediaController.currentMediaItemIndex
@@ -524,18 +539,6 @@ class MusicPage : Fragment() {
             viewHolder.context.getString(R.string.unnamed_song)
         } else {
             entry.title
-        }
-
-
-        val tags = entry.tags
-            .map { it.lowercase().replaceFirstChar { c -> c.uppercaseChar() } }
-            .joinToString(", ")
-
-
-        val author = if (entry.author.isBlank()) {
-            viewHolder.context.getString(R.string.unauthored_song)
-        } else {
-            entry.author
         }
 
         if (entry.error) {
