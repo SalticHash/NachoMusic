@@ -1,13 +1,19 @@
 package com.saltichash.musicapp
 
+import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +23,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
@@ -75,6 +82,7 @@ class MusicPage : Fragment() {
     private lateinit var albumImage: ImageView
     private lateinit var songTitle: TextView
     private lateinit var currentSongEntry: ConstraintLayout
+    private lateinit var currentSongProgress: ProgressBar
     private lateinit var musicPlayerLayout: ConstraintLayout
 
     override fun onStart() {
@@ -96,10 +104,18 @@ class MusicPage : Fragment() {
                     changedMetadata(metadata, item)
                 }
                 mediaController.addListener(object : Player.Listener {
-                        override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                            updateMetadata()
+                    override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
+                        updateMetadata()
+                    }
+
+                    override fun onIsPlayingChanged(isPlaying: Boolean) {
+                        if (isPlaying) {
+                            startProgressUpdates()
+                        } else {
+                            stopProgressUpdates()
                         }
-                    })
+                    }
+                })
                 updateMetadata()
 
                 mediaController.addListener(object : Player.Listener {
@@ -134,6 +150,8 @@ class MusicPage : Fragment() {
         songTitle = musicPlayerLayout.findViewById(R.id.songTitle)
         albumImage = musicPlayerLayout.findViewById(R.id.albumImage)
         currentSongEntry = view.findViewById(R.id.currentSongEntry)
+        currentSongProgress = currentSongEntry.findViewById(R.id.progressBar)
+        currentSongProgress.visibility = View.VISIBLE
 
         tvEmptySongs = view.findViewById(R.id.tvEmptySongs)
         tvEmptySongs.text = getString(R.string.empty_songs, MusicManager.appPath.absolutePath)
@@ -284,14 +302,44 @@ class MusicPage : Fragment() {
         })
 
         currentSongEntry.setOnClickListener {
-            if (musicPlayerLayout.visibility == View.VISIBLE) {
-                musicPlayerLayout.visibility = View.GONE
-                lvMusicEntries.visibility = View.VISIBLE
+            val idx = mediaController.currentMediaItemIndex
+            val entry = listAdapter.getRealItem(idx)
+            if (!listAdapter.containsEntry(entry)) return@setOnClickListener
+            val practicalPosition = listAdapter.getFilteredPosition(entry)
+
+            val layoutManager = lvMusicEntries.layoutManager as LinearLayoutManager
+            val first = layoutManager.findFirstVisibleItemPosition()
+            val last = layoutManager.findLastVisibleItemPosition()
+
+            if (practicalPosition in first..last) {
+                lvMusicEntries.post {
+                    val holder = lvMusicEntries.findViewHolderForAdapterPosition(practicalPosition)
+                    val view = holder?.itemView ?: return@post
+                    view.isPressed = true
+                    view.postDelayed({ view.isPressed = false }, 150)
+                }
             } else {
-                musicPlayerLayout.visibility = View.VISIBLE
-                lvMusicEntries.visibility = View.GONE
+                lvMusicEntries.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrollStateChanged(rv: RecyclerView, newState: Int) {
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            rv.removeOnScrollListener(this)
+
+                            val holder = lvMusicEntries.findViewHolderForAdapterPosition(practicalPosition)
+                            val view = holder?.itemView ?: return
+
+                            view.isPressed = true
+                            view.postDelayed({ view.isPressed = false }, 150)
+                        }
+                    }
+                })
             }
+
+
+            lvMusicEntries.smoothScrollToPosition(practicalPosition)
+
+
         }
+
 
         return view
     }
@@ -441,13 +489,33 @@ class MusicPage : Fragment() {
             val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
             albumImage.setImageBitmap(bitmap)
         }
+        val duration = mediaController.duration
+        currentSongProgress.max = duration.toInt()
+        currentSongProgress.progress = 0
     }
 
+    private val currentSongProgressHandler = Handler(Looper.getMainLooper())
+
+    private val updateProgress = object : Runnable {
+        override fun run() {
+            val position = mediaController.currentPosition
+            currentSongProgress.progress = position.toInt()
+
+            currentSongProgressHandler.postDelayed(this, 500)
+        }
+    }
+    private fun startProgressUpdates() {
+        currentSongProgressHandler.post(updateProgress)
+    }
+    private fun stopProgressUpdates() {
+        currentSongProgressHandler.removeCallbacks(updateProgress)
+    }
 
     // Replace the contents of a view (invoked by the layout manager)
     fun setCurrentSongEntry(entry: MusicEntry) {
         val tvTitle: TextView = currentSongEntry.findViewById(R.id.tvTitle)
         val tvDesc: TextView = currentSongEntry.findViewById(R.id.tvDesc)
+        tvDesc.visibility = View.GONE
         val tvDuration: TextView = currentSongEntry.findViewById(R.id.tvDuration)
         val icError: ImageView = currentSongEntry.findViewById(R.id.icError)
 
@@ -470,37 +538,8 @@ class MusicPage : Fragment() {
             entry.author
         }
 
-        // Possible outcomes:
-        // (Maria - Album) / (Author - Album)
-        // (Maria)
-        // ""
-        val creditsText = if (entry.album.isNotBlank()) {
-            String.format(Locale.getDefault(), "(%s - %s)", author, entry.album)
-        } else if (entry.author.isNotBlank()) {
-            String.format(Locale.getDefault(), "(%s)", entry.author)
-        } else {
-            ""
-        }
-
-        tvDesc.text = if (creditsText.isNotBlank()) {
-            if (tags.isNotBlank()) {
-                String.format(Locale.getDefault(), "%s • %s", creditsText, tags)
-            } else {
-                String.format(Locale.getDefault(), "%s", creditsText)
-            }
-        } else {
-            String.format(Locale.getDefault(), "%s", tags)
-        }
-
-
         if (entry.error) {
             icError.visibility = View.VISIBLE
-        }
-
-        if (entry.author.isBlank() && entry.album.isBlank() && tags.isBlank()) {
-            tvDesc.visibility = View.GONE
-        } else {
-            tvDesc.visibility = View.VISIBLE
         }
 
         val secondsTotal = entry.durationMsec / 1000
@@ -508,6 +547,21 @@ class MusicPage : Fragment() {
         val seconds = secondsTotal % 60
         tvDuration.text =
             String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+    }
+
+    fun showPlayer(show: Boolean) {
+        if (!this::musicPlayerLayout.isInitialized) return
+        if (show) {
+            musicPlayerLayout.visibility = View.VISIBLE
+            lvMusicEntries.visibility = View.GONE
+            searchView.visibility = View.GONE
+            currentSongEntry.visibility = View.GONE
+        } else {
+            musicPlayerLayout.visibility = View.GONE
+            lvMusicEntries.visibility = View.VISIBLE
+            searchView.visibility = View.VISIBLE
+            currentSongEntry.visibility = View.VISIBLE
+        }
     }
 
 }

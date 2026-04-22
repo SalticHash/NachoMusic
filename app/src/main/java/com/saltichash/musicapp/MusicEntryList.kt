@@ -41,6 +41,14 @@ class MusicEntryAdapter(private val dataSet: MutableList<MusicEntry>,
         return dataSet.indexOf(item)
     }
 
+    fun getFilteredPosition(item: MusicEntry): Int {
+        return filteredList.indexOf(item)
+    }
+
+    fun containsEntry(item: MusicEntry): Boolean {
+        return filteredList.contains(item)
+    }
+
     fun updateList(newList: List<MusicEntry>) {
         val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun getOldListSize() = filteredList.size

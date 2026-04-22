@@ -138,9 +138,11 @@ class MainActivity : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
 
         // Get existing fragment
-        val existingFragment = supportFragmentManager.findFragmentByTag(tag)
+        val musicPagePlayer = (tag == "PlayerPage")
+        val realTag = if (tag == "PlayerPage") "MusicPage" else tag;
+        val existingFragment = supportFragmentManager.findFragmentByTag(realTag)
         if (existingFragment == null) {
-            transaction.add(R.id.fragment_container, fragment, tag)
+            transaction.add(R.id.fragment_container, fragment, realTag)
         }
 
         // Hide current fragment
@@ -155,6 +157,7 @@ class MainActivity : AppCompatActivity() {
 
         // Set to existing if existed, else fragment
         activeFragment = existingFragment ?: fragment
+        (activeFragment as? MusicPage)?.showPlayer(musicPagePlayer)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

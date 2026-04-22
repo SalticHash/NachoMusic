@@ -65,6 +65,17 @@
 
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:text="(Author - Album) • Funny" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:indeterminateBehavior="repeat"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
     </LinearLayout>
 
     <ImageView
