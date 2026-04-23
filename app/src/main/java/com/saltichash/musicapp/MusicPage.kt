@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -72,9 +73,9 @@ class MusicPage : Fragment() {
     private var editSongLayout: ConstraintLayout? = null
     private lateinit var etTitle: EditText
     private lateinit var etUrl: EditText
-    private lateinit var etAuthor: EditText
-    private lateinit var etAlbum: EditText
-    private lateinit var etTags: EditText
+    private lateinit var etAuthor: AutoCompleteTextView
+    private lateinit var etAlbum: AutoCompleteTextView
+    private lateinit var etTags: MultiAutoCompleteTextView
     private lateinit var btnEditSong: Button
     private lateinit var btnCancelEditSong: Button
     private lateinit var btnDeleteSong: Button
@@ -103,14 +104,14 @@ class MusicPage : Fragment() {
                 mediaController = controllerFuture.get()
                 playerView.setPlayer(mediaController)
 
-                fun updateMetadata() {
-                    val metadata = mediaController.mediaMetadata
+                fun updateMetadata(metadata: MediaMetadata? = null) {
+                    val rmetadata = metadata ?: mediaController.mediaMetadata
                     val item = listAdapter.getRealItem(mediaController.currentMediaItemIndex)
-                    changedMetadata(metadata, item)
+                    changedMetadata(rmetadata, item)
                 }
                 mediaController.addListener(object : Player.Listener {
                     override fun onMediaMetadataChanged(mediaMetadata: MediaMetadata) {
-                        updateMetadata()
+                        updateMetadata(mediaMetadata)
                     }
 
                     override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -121,6 +122,8 @@ class MusicPage : Fragment() {
                         }
                     }
                 })
+                Log.i(TAG, "Updated metadata via restart system?")
+
                 updateMetadata()
 
                 mediaController.addListener(object : Player.Listener {
@@ -214,6 +217,27 @@ class MusicPage : Fragment() {
                 etAuthor.setText(model.author)
                 etAlbum.setText(model.album)
                 etTags.setText(model.tags.joinToString(", "))
+
+                val tags = MusicManager.musicEntries.values
+                    .flatMap { it.tags }
+                    .distinct()
+                val tagsAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, tags)
+                etTags.setAdapter(tagsAdapter)
+                etTags.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
+
+                val albums = MusicManager.musicEntries.values
+                    .map { it.album }
+                    .distinct()
+                val albumsAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, albums)
+                etAlbum.setAdapter(albumsAdapter)
+
+                val authors = MusicManager.musicEntries.values
+                    .map { it.author }
+                    .distinct()
+                val authorsAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, authors)
+                etAuthor.setAdapter(authorsAdapter)
+
+
                 return true
             }
         })
@@ -294,7 +318,7 @@ class MusicPage : Fragment() {
 
 
         // Search
-        val aaStr:ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item,
+        val aaStr:ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1,
             mutableListOf())
         searchView.setAdapter(aaStr);
         searchView.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
@@ -308,7 +332,11 @@ class MusicPage : Fragment() {
         searchView.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) return@setOnFocusChangeListener
             val tags = MusicManager.musicEntries.values
-                .flatMap { it.tags }
+                .flatMap {
+                    val map = mutableListOf<String>(it.album, it.author)
+                    map.addAll(it.tags)
+                    return@flatMap map
+                }
                 .distinct()
 
             aaStr.clear()
@@ -496,17 +524,31 @@ class MusicPage : Fragment() {
         }
     }
 
+    private val artworkFailHandler = Handler(Looper.getMainLooper())
+    private var artworkFallbackRunnable: Runnable? = null
     private fun changedMetadata(meta: MediaMetadata, entry: MusicEntry?) {
-        if (entry != null) setCurrentSongEntry(entry)
-        songTitle.text = entry?.title
-        val data = meta.artworkData
-        if (data?.isNotEmpty() == true) {
+        if (entry != null) {
+            setCurrentSongEntry(entry)
+            songTitle.text = entry.title
+            val duration = entry.durationMsec.toInt()
+            currentSongProgress.max = duration
+            currentSongProgress.progress = 0
+        }
+
+        artworkFallbackRunnable?.let { artworkFailHandler.removeCallbacks(it) }
+        if (meta.artworkUri != null) {
+            albumImage.setImageURI(meta.artworkUri)
+        } else if (meta.artworkData != null) {
+            val data = meta.artworkData as ByteArray
             val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
             albumImage.setImageBitmap(bitmap)
+        } else {
+            artworkFallbackRunnable = Runnable {
+                albumImage.setImageResource(R.drawable.ic_download_error)
+            }
+            artworkFailHandler.postDelayed(artworkFallbackRunnable!!, 150)
         }
-        val duration = mediaController.duration
-        currentSongProgress.max = duration.toInt()
-        currentSongProgress.progress = 0
+
     }
 
     private val currentSongProgressHandler = Handler(Looper.getMainLooper())

@@ -67,7 +67,7 @@
         app:layout_constraintStart_toStartOf="@+id/etUrl"
         app:layout_constraintTop_toBottomOf="@id/etUrl" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/etAuthor"
         android:layout_width="0dp"
         android:layout_height="48dp"
@@ -83,7 +83,7 @@
         app:layout_constraintStart_toStartOf="@id/etTitle"
         app:layout_constraintTop_toBottomOf="@id/etTitle" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/etAlbum"
         android:layout_width="0dp"
         android:layout_height="48dp"
@@ -101,7 +101,7 @@
         app:layout_constraintStart_toStartOf="@id/etAuthor"
         app:layout_constraintTop_toBottomOf="@id/etAuthor" />
 
-    <EditText
+    <MultiAutoCompleteTextView
         android:id="@+id/etTags"
         android:layout_width="0dp"
         android:layout_height="48dp"

@@ -17,6 +17,7 @@
     <string name="not_found">Music file not found…</string>
     <string name="unnamed_song">Unnamed song</string>
     <string name="unauthored_song">Author</string>
+    <string name="search_hint">Search (Title, Author, Album, Tags)</string>
 
     <!-- Media controls -->
     <string name="controls_next">Next song</string>
@@ -53,6 +54,9 @@
     <string name="batch_success">Batch download finished!</string>
     <string name="download_success">Downloaded \"%1$s\"!</string>
     <string name="download_failure">Download failed…</string>
+    <string name="toggle_on">ON</string>
+    <string name="toggle_off">OFF</string>
+
     <!-- Notification -->
     <string name="download_info">Your download is being processed.</string>
     <string name="download_starting">Download starting…</string>

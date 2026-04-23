@@ -15,8 +15,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.EditText
+import android.widget.MultiAutoCompleteTextView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -124,9 +127,9 @@ class DownloadPage : Fragment() {
     private lateinit var btnAutofillAlbum: ToggleButton
     private lateinit var etTitle: EditText
     private lateinit var etUrl: EditText
-    private lateinit var etAuthor: EditText
-    private lateinit var etAlbum: EditText
-    private lateinit var etTags: EditText
+    private lateinit var etAuthor: AutoCompleteTextView
+    private lateinit var etAlbum: AutoCompleteTextView
+    private lateinit var etTags: MultiAutoCompleteTextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -157,6 +160,26 @@ class DownloadPage : Fragment() {
         etAuthor = view.findViewById(R.id.etAuthor)
         etAlbum = view.findViewById(R.id.etAlbum)
         etTags = view.findViewById(R.id.etTags)
+
+
+        val tags = MusicManager.musicEntries.values
+            .flatMap { it.tags }
+            .distinct()
+        val tagsAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, tags)
+        etTags.setAdapter(tagsAdapter)
+        etTags.setTokenizer(MultiAutoCompleteTextView.CommaTokenizer())
+
+        val albums = MusicManager.musicEntries.values
+            .map { it.album }
+            .distinct()
+        val albumsAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, albums)
+        etAlbum.setAdapter(albumsAdapter)
+
+        val authors = MusicManager.musicEntries.values
+            .map { it.author }
+            .distinct()
+        val authorsAdapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_list_item_1, authors)
+        etAuthor.setAdapter(authorsAdapter)
 
         // Clear errors after typing
         etTitle.addTextChangedListener {etTitle.error = null}

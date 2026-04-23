@@ -17,6 +17,8 @@
     <string name="not_found">Archivo de música no encontrado…</string>
     <string name="unnamed_song">Canción sin nombrar</string>
     <string name="unauthored_song">Autor</string>
+    <string name="search_hint">Buscar (Nombre, Autor, Albúm, Etiquetas)</string>
+
 
     <!-- Media controls -->
     <string name="controls_next">Siguiente canción</string>
@@ -30,7 +32,7 @@
     <string name="song_url">URL de la canción</string>
     <string name="song_title">Nombre</string>
     <string name="song_author">Autor</string>
-    <string name="song_album">Albúm Name</string>
+    <string name="song_album">Nombre del Albúm</string>
     <string name="song_tags">Etiquetas</string>
     <string name="song_form_error_url">URL invalido</string>
     <string name="song_form_error_title">Se requiere nombre</string>
@@ -53,6 +55,8 @@
     <string name="batch_success">Descarga por lote completa!</string>
     <string name="download_success">Se descargo \"%1$s\"!</string>
     <string name="download_failure">Descarga fallida…</string>
+    <string name="toggle_on">SI</string>
+    <string name="toggle_off">NO</string>
 
     <!-- Downloader -->
     <string name="downloader_update">Actualizar el downloader</string>
